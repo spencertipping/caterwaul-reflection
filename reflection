@@ -984,6 +984,10 @@ terminal::error("Verification failed; expected $state but got $observed from $ot
 hook('after-verify', $result, observed => $observed, expected => $state);
 $result;
 __
+meta::hook('after-shell::render', <<'__');
+render();
+
+__
 meta::hook('before-shell::ad-module', <<'__');
 ad('module::');
 
