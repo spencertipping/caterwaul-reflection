@@ -277,6 +277,7 @@ meta::alias('er', <<'__');
 edit sdoc::js::repl -f
 
 __
+meta::alias('es', 'scope');
 meta::alias('et', <<'__');
 edit sdoc::js::test -f
 
@@ -1456,6 +1457,21 @@ close over variables need their own first-class scopes.
                                                                                    enter(node) = function_template /~match/ node -re [it ? context[node.id()] = scope_annotations(it._body
 
 __
+meta::module('scope', <<'__');
+Scope analysis | Spencer Tipping
+Licensed under the terms of the MIT source code license
+
+Introduction.
+This module annotates local variable nodes by indicating which function they belong to. It does this by returning a map from syntax node ID to enclosing function node.
+
+caterwaul('js_all')(function ($) {
+  $.variable_scopes(tree) = tree /~traverse/ visit -re- map -where [map            = {},
+                                                                    function_stack = [],
+                                                                    variable_stack = {},
+                                                                    visit(n)       = n.entering && n.entering.data === 'function' ? enter_subscope(n.entering) :
+                                                                                     n.exiting  && n.exiting.data  === 'function' ? 
+
+__
 meta::parent('/home/spencertipping/bin/caterwaul-extension.html', <<'__');
 function::module                                            cd75ead8fad4b21dd5e29bc85a2de334
 function::modules                                           e3b6934465aed29eebaa08eef3be15fd
@@ -1838,6 +1854,8 @@ This is where your modules get loaded into the REPL. This script is included by 
 // modules go here
 
 - include perl::sdoc('module::reflection')
+
+- include perl::sdoc('module::scope')
 
 __
 meta::sdoc('js::repl', <<'__');
